@@ -190,18 +190,24 @@ private struct AirDropFilePanel: View {
 
     var body: some View {
         GeometryReader { geo in
-        HStack(spacing: 10) {
-            // ── 左 1/3：隔空投送 ──
-            airDropZone
-                .frame(width: geo.size.width / 3)
+            HStack(spacing: 10) {
+                // ── 左 1/3：隔空投送 ──
+                airDropZone
+                    .frame(width: geo.size.width / 3)
 
-            VLine().opacity(0.06).padding(.vertical, 6)
+                VLine().opacity(0.06).padding(.vertical, 6)
 
-            // ── 右 2/3：文件托盘 ──
-            fileTrayZone
+                // ── 右 2/3：文件托盘 ──
+                fileTrayZone
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .onDrop(of: [.fileURL], isTargeted: $trayTarget) { providers in
+                // 统一接收拖放，保存到文件托盘
+                providers.saveToTray()
+                return true
+            }
         }
         .frame(minHeight: 120)
-        }
     }
 
     // ── 隔空投送区域 ──
@@ -273,10 +279,6 @@ private struct AirDropFilePanel: View {
             }
         }
         .frame(maxWidth: .infinity, minHeight: 110)
-        .onDrop(of: [.fileURL], isTargeted: $trayTarget) { providers in
-            providers.saveToTray()
-            return true
-        }
     }
 
     private func openAirDrop() {

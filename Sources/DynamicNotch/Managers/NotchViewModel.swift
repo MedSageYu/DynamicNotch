@@ -342,9 +342,9 @@ final class NotchViewModel: NSObject, ObservableObject {
     @Published var pendingAirDropFile: AirDropFile?
     private var airDropService: NSSharingService?
 
-    /// 拖拽进入触发区（距 notch 80pt 内）→ 展开
+    /// 拖拽进入触发区（距 notch 200pt 内，约 pill 面积 4~5 倍）→ 展开
     func handleDragEntered(at screenLoc: NSPoint) {
-        let trigger = hitRect.insetBy(dx: -80, dy: -80)
+        let trigger = hitRect.insetBy(dx: -200, dy: -200)
         guard trigger.contains(screenLoc) else { return }
         if status != .opened { openNotch() }
         isDragTargetActive = true

@@ -267,16 +267,19 @@ struct SettingsPanel: View {
 
                 Divider().background(.white.opacity(0.06)).padding(.horizontal, 8)
 
-                // ── 文件托盘清除规则 ──
+                // ── 文件托盘设置 ──
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("文件托盘").font(.system(size: 9, weight: .semibold)).foregroundStyle(.secondary)
+                    HStack(spacing: 4) {
+                        Image(systemName: "tray.and.arrow.down").font(.system(size: 9)).foregroundStyle(.secondary)
+                        Text("文件托盘设置").font(.system(size: 9, weight: .semibold)).foregroundStyle(.secondary)
+                    }
                         .padding(.top, 8).padding(.horizontal, 8)
-                    Text("拖出文件后的清除规则")
+                    Text("文件拖入托盘后的自动清除规则")
                         .font(.system(size: 8)).foregroundStyle(.secondary.opacity(0.6))
                         .padding(.horizontal, 8).padding(.bottom, 4)
                     HStack(spacing: 6) {
                         Image(systemName: "clock.arrow.circlepath").font(.system(size: 9)).foregroundStyle(.secondary).frame(width: 14)
-                        Text("清除策略").font(.system(size: 10)).foregroundStyle(.white)
+                        Text("自动清除策略").font(.system(size: 10)).foregroundStyle(.white)
                         Spacer()
                         Picker("", selection: $settings.fileTrayClearPolicy) {
                             ForEach(FileTrayClearPolicy.allCases) { policy in
