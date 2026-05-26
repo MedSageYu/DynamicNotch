@@ -172,7 +172,7 @@ private struct HomePanelView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            MusicControlView().frame(maxWidth: .infinity)
+            MusicControlView().frame(maxWidth: .infinity, maxHeight: .infinity)
             VLine().opacity(0.08).padding(.vertical, 4)
             MirrorInlinePreview(vm: vm).frame(maxWidth: .infinity)
             VLine().opacity(0.08).padding(.vertical, 4)
