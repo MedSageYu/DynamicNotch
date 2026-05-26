@@ -57,7 +57,7 @@ final class NotchViewModel: NSObject, ObservableObject {
             UserDefaults.standard.set(collapsedHeight, forKey: "collapsedHeight")
         }
     }
-    var notchClosedSize: CGSize = .init(width: 190, height: 26)
+    var notchClosedSize: CGSize = .init(width: 165, height: 26)
     var notchOpenedSize: CGSize = .init(width: 480, height: 190)
 
     /// 根据屏幕尺寸自适应计算 pill 大小，保证不同 Mac 上视觉一致
@@ -71,7 +71,7 @@ final class NotchViewModel: NSObject, ObservableObject {
         let hasNotch = menuBarH >= 30
 
         // 收起态：宽度 ~15% 屏幕宽（180~230），高度按有无刘海自适应
-        let closedW = (sw * 0.148).clamped(to: 180...230)
+        let closedW = (sw * 0.13).clamped(to: 155...220)
         let defaultClosedH: CGFloat = hasNotch ? 26 : 22
 
         // 展开态：宽度 ~35% 屏幕宽（420~580），高度 ~21%（170~230）

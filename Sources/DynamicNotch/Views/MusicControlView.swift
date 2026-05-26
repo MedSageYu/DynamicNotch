@@ -77,8 +77,8 @@ struct MusicControlView: View {
                     }.buttonStyle(.plain)
                 }
             } else {
-                // 用 ZStack + frame 兜底，确保内容在音乐列内绝对居中
-                ZStack {
+                VStack(spacing: 0) {
+                    Spacer()
                     VStack(spacing: 6) {
                         Image(systemName: "music.note.list")
                             .font(.system(size: 24))
@@ -91,8 +91,9 @@ struct MusicControlView: View {
                             .foregroundColor(.white.opacity(0.3))
                             .multilineTextAlignment(.center)
                     }
+                    Spacer()
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

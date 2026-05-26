@@ -1,5 +1,6 @@
 import Cocoa
 import SwiftUI
+import UniformTypeIdentifiers
 
 // MARK: - 文件托盘项（带时间戳）
 
@@ -136,17 +137,31 @@ extension [NSItemProvider] {
     /// 拖入文件到文件托盘
     func saveToTray() {
         DispatchQueue.global().async {
-            let sem = DispatchSemaphore(value: 0)
+            var urls: [URL] = []
+            let group = DispatchGroup()
+
             for provider in self {
-                _ = provider.loadObject(ofClass: URL.self) { url, _ in
-                    if let url {
-                        DispatchQueue.main.async {
-                            FileTrayManager.shared.add(url)
+                group.enter()
+                if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+                    provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier) { item, _ in
+                        if let url = item as? URL {
+                            urls.append(url)
+                        } else if let data = item as? Data,
+                                  let u = URL(dataRepresentation: data, relativeTo: nil) {
+                            urls.append(u)
                         }
+                        group.leave()
                     }
-                    sem.signal()
+                } else {
+                    group.leave()
                 }
-                sem.wait()
+            }
+            group.wait()
+
+            for url in urls {
+                DispatchQueue.main.async {
+                    FileTrayManager.shared.add(url)
+                }
             }
         }
     }

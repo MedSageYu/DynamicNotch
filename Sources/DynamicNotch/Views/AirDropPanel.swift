@@ -62,16 +62,26 @@ extension [NSItemProvider] {
     /// 将拖入的文件通过隔空投送发送
     func startAirDrop() {
         DispatchQueue.global().async {
-            let sem = DispatchSemaphore(value: 0)
             var urls: [URL] = []
+            let group = DispatchGroup()
 
             for provider in self {
-                _ = provider.loadObject(ofClass: URL.self) { url, _ in
-                    if let url { urls.append(url) }
-                    sem.signal()
+                group.enter()
+                if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+                    provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier) { item, _ in
+                        if let url = item as? URL {
+                            urls.append(url)
+                        } else if let data = item as? Data,
+                                  let u = URL(dataRepresentation: data, relativeTo: nil) {
+                            urls.append(u)
+                        }
+                        group.leave()
+                    }
+                } else {
+                    group.leave()
                 }
-                sem.wait()
             }
+            group.wait()
 
             guard !urls.isEmpty else { return }
 

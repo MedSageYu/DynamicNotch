@@ -171,7 +171,7 @@ private struct HomePanelView: View {
     @ObservedObject var vm: NotchViewModel
 
     var body: some View {
-        HStack(alignment: .top, spacing: 0) {
+        HStack(spacing: 0) {
             MusicControlView().frame(maxWidth: .infinity)
             VLine().opacity(0.08).padding(.vertical, 4)
             MirrorInlinePreview(vm: vm).frame(maxWidth: .infinity)
@@ -231,7 +231,7 @@ private struct AirDropFilePanel: View {
         .frame(maxWidth: .infinity, minHeight: 110)
         .contentShape(Rectangle())
         .onTapGesture { openAirDrop() }
-        .onDrop(of: [.data], isTargeted: $airDropTarget) { providers in
+        .onDrop(of: [.fileURL], isTargeted: $airDropTarget) { providers in
             providers.startAirDrop()
             return true
         }
@@ -273,7 +273,7 @@ private struct AirDropFilePanel: View {
             }
         }
         .frame(maxWidth: .infinity, minHeight: 110)
-        .onDrop(of: [.data], isTargeted: $trayTarget) { providers in
+        .onDrop(of: [.fileURL], isTargeted: $trayTarget) { providers in
             providers.saveToTray()
             return true
         }

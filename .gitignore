@@ -31,3 +31,6 @@ Pods/
 
 # Deployed app (local only)
 ~/Applications/DynamicNotch.app/
+DynamicNotch.app/
+mrhelper/
+*.app/
