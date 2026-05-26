@@ -79,16 +79,16 @@ struct MusicControlView: View {
             } else {
                 VStack(spacing: 0) {
                     Spacer()
-                    VStack(spacing: 6) {
+                    VStack(spacing: 8) {
                         Image(systemName: "music.note.list")
-                            .font(.system(size: 24))
-                            .foregroundStyle(.secondary)
+                            .font(.system(size: 28))
+                            .foregroundStyle(.white.opacity(0.4))
                         Text("未在播放音乐")
-                            .font(.system(size: 11))
-                            .foregroundStyle(.secondary)
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.5))
                         Text("在 Apple Music 播放歌曲")
                             .font(.system(size: 9))
-                            .foregroundColor(.white.opacity(0.3))
+                            .foregroundStyle(.white.opacity(0.3))
                             .multilineTextAlignment(.center)
                     }
                     Spacer()
