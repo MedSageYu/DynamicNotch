@@ -1,0 +1,33 @@
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+DerivedData/
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Build artifacts
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# CocoaPods
+Pods/
+
+# SPM build artifacts inside .swiftpm
+.swiftpm/
+
+# Deployed app (local only)
+~/Applications/DynamicNotch.app/
