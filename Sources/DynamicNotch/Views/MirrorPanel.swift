@@ -281,14 +281,37 @@ struct SettingsPanel: View {
                         Image(systemName: "clock.arrow.circlepath").font(.system(size: 9)).foregroundStyle(.secondary).frame(width: 14)
                         Text("自动清除策略").font(.system(size: 10)).foregroundStyle(.white)
                         Spacer()
-                        Picker("", selection: $settings.fileTrayClearPolicy) {
+                        Menu {
                             ForEach(FileTrayClearPolicy.allCases) { policy in
-                                Text(policy.label).tag(policy)
+                                Button {
+                                    settings.fileTrayClearPolicy = policy
+                                } label: {
+                                    HStack {
+                                        Text(policy.label)
+                                        if settings.fileTrayClearPolicy == policy {
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
+                                }
                             }
+                        } label: {
+                            HStack(spacing: 3) {
+                                Text(settings.fileTrayClearPolicy.label)
+                                    .font(.system(size: 9))
+                                    .foregroundStyle(.white.opacity(0.7))
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .font(.system(size: 7))
+                                    .foregroundStyle(.white.opacity(0.4))
+                            }
+                            .padding(.horizontal, 6).padding(.vertical, 3)
+                            .background(RoundedRectangle(cornerRadius: 5).fill(.white.opacity(0.08)))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(.white.opacity(0.12), lineWidth: 0.5)
+                            )
                         }
-                        .pickerStyle(.menu)
-                        .scaleEffect(0.8)
-                        .frame(width: 80)
+                        .menuStyle(.borderlessButton)
+                        .fixedSize()
                     }
                     .padding(.horizontal, 8).padding(.vertical, 4)
                 }
