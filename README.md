@@ -47,6 +47,18 @@ open ~/Applications/Pill.app
 - Apple Silicon (arm64)
 - Swift 5.9+ (comes with Xcode 15+ or Command Line Tools)
 
+### Swift Version Compatibility
+
+This project is tested with Swift 6.3.2. If you have Swift 6.0.x, it should still work, but if you encounter issues:
+
+```bash
+# Check your Swift version
+swift --version
+
+# If older than 5.9, update Xcode or Command Line Tools
+sudo softwareupdate --all --install --force
+```
+
 ### Installing Swift
 
 If `swift` command not found:
