@@ -16,7 +16,6 @@
 ---
 
 <p align="center">
-  <!-- TODO: Replace with actual screenshot/GIF -->
   <img src="docs/demo.gif" alt="DynamicNotch Demo" width="600">
 </p>
 
@@ -38,16 +37,10 @@ All of this, **100% free and open source**.
 
 ## 📸 Screenshots
 
-<!-- TODO: Add real screenshots -->
-<!-- 
 <p align="center">
   <img src="docs/screenshot-collapsed.png" width="400" alt="Collapsed State">
   <img src="docs/screenshot-expanded.png" width="600" alt="Expanded State">
-  <img src="docs/screenshot-music.png" width="400" alt="Music Control">
 </p>
--->
-
-> Screenshots coming soon! For now, clone and try it yourself — it takes 30 seconds.
 
 ---
 

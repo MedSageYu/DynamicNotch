@@ -16,7 +16,6 @@
 ---
 
 <p align="center">
-  <!-- TODO: 替换为实际截图/GIF -->
   <img src="docs/demo.gif" alt="DynamicNotch 演示" width="600">
 </p>
 
