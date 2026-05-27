@@ -15,9 +15,7 @@
 
 ---
 
-<p align="center">
-  <img src="docs/demo.gif" alt="DynamicNotch Demo" width="600">
-</p>
+
 
 **DynamicNotch** brings the iPhone Dynamic Island experience to macOS — a smart, floating notch that lives in your menu bar and adapts to what you're doing.
 
@@ -37,10 +35,7 @@ All of this, **100% free and open source**.
 
 ## 📸 Screenshots
 
-<p align="center">
-  <img src="docs/screenshot-collapsed.png" width="400" alt="Collapsed State">
-  <img src="docs/screenshot-expanded.png" width="600" alt="Expanded State">
-</p>
+> Screenshots coming soon. Clone and try it yourself — takes 30 seconds.
 
 ---
 

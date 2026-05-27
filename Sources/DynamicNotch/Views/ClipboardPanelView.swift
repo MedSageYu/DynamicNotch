@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - 剪贴板历史面板（Tab 3）
+// MARK: - 剪贴板历史面板（横向卡片滚动）
 
 struct ClipboardPanelView: View {
     @ObservedObject private var clip = ClipboardManager.shared
@@ -14,11 +14,11 @@ struct ClipboardPanelView: View {
 
             Divider().background(.white.opacity(0.08))
 
-            // ── 列表 ──
+            // ── 内容 ──
             if clip.items.isEmpty {
                 emptyState
             } else {
-                listView
+                scrollContent
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -42,7 +42,6 @@ struct ClipboardPanelView: View {
                         .foregroundColor(.white.opacity(0.3))
                 }
                 .buttonStyle(.plain)
-                .help("清空全部")
             }
         }
         .padding(.horizontal, 12)
@@ -60,7 +59,7 @@ struct ClipboardPanelView: View {
             Text("暂无记录")
                 .font(.system(size: 11))
                 .foregroundColor(.white.opacity(0.3))
-            Text("复制文字后自动记录")
+            Text("复制文字或图片后自动记录")
                 .font(.system(size: 9))
                 .foregroundColor(.white.opacity(0.2))
             Spacer()
@@ -68,18 +67,20 @@ struct ClipboardPanelView: View {
         .frame(maxWidth: .infinity)
     }
 
-    // MARK: - 列表
+    // MARK: - 横向滚动内容
 
-    private var listView: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            LazyVStack(spacing: 1) {
+    private var scrollContent: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
                 ForEach(clip.items) { item in
-                    ClipboardItemRow(
+                    ClipboardCard(
                         item: item,
                         isHovered: hoveredId == item.id,
                         isCopied: copiedId == item.id,
                         onHover: { hovering in
-                            hoveredId = hovering ? item.id : nil
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                hoveredId = hovering ? item.id : nil
+                            }
                         },
                         onTap: {
                             clip.copy(item)
@@ -92,14 +93,15 @@ struct ClipboardPanelView: View {
                     )
                 }
             }
-            .padding(.vertical, 4)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 8)
         }
     }
 }
 
-// MARK: - 单条剪贴板条目
+// MARK: - 单张卡片（文字 / 图片）
 
-private struct ClipboardItemRow: View {
+private struct ClipboardCard: View {
     let item: ClipboardItem
     let isHovered: Bool
     let isCopied: Bool
@@ -108,59 +110,145 @@ private struct ClipboardItemRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        HStack(spacing: 8) {
-            // 内容
-            VStack(alignment: .leading, spacing: 2) {
-                Text(item.preview)
-                    .font(.system(size: 10))
-                    .foregroundColor(.white.opacity(0.7))
-                    .lineLimit(2)
-                    .multilineTextAlignment(.leading)
+        ZStack(alignment: .topTrailing) {
+            cardContent
 
-                Text(timeAgo)
-                    .font(.system(size: 8, design: .monospaced))
-                    .foregroundColor(.white.opacity(0.25))
-            }
-
-            Spacer(minLength: 0)
-
-            // 操作按钮（hover 时显示）
+            // 删除按钮（hover 时显示）
             if isHovered {
-                HStack(spacing: 6) {
-                    if isCopied {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 12))
-                            .foregroundColor(.green)
-                    } else {
-                        Image(systemName: "doc.on.doc")
-                            .font(.system(size: 11))
-                            .foregroundColor(.white.opacity(0.4))
-                    }
-
-                    Button { onDelete() } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 11))
-                            .foregroundColor(.white.opacity(0.3))
-                    }
-                    .buttonStyle(.plain)
+                Button { onDelete() } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 12))
+                        .foregroundColor(.white.opacity(0.6))
+                        .background(Circle().fill(Color.black.opacity(0.5)))
                 }
+                .buttonStyle(.plain)
+                .padding(4)
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .frame(width: cardWidth, height: 100)
         .background(
-            isHovered ? Color.white.opacity(0.06) : Color.clear
+            RoundedRectangle(cornerRadius: 10)
+                .fill(isHovered ? Color.white.opacity(0.1) : Color.white.opacity(0.04))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.white.opacity(isHovered ? 0.15 : 0.06), lineWidth: 0.5)
         )
         .contentShape(Rectangle())
         .onHover(perform: onHover)
         .onTapGesture(perform: onTap)
     }
 
+    // MARK: - 卡片内容
+
+    @ViewBuilder
+    private var cardContent: some View {
+        switch item.content {
+        case let .text(text):
+            textCard(text)
+        case let .image(img):
+            imageCard(img)
+        }
+    }
+
+    // MARK: - 文字卡片
+
+    private func textCard(_ text: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            // 时间
+            Text(timeAgo)
+                .font(.system(size: 8, design: .monospaced))
+                .foregroundColor(.white.opacity(0.25))
+
+            // 文字内容（hover 时显示更多行）
+            Text(text)
+                .font(.system(size: 10))
+                .foregroundColor(.white.opacity(0.7))
+                .lineLimit(isHovered ? 8 : 3)
+                .multilineTextAlignment(.leading)
+                .animation(.easeInOut(duration: 0.15), value: isHovered)
+
+            Spacer(minLength: 0)
+
+            // 底部操作
+            HStack {
+                if isCopied {
+                    Label("已复制", systemImage: "checkmark.circle.fill")
+                        .font(.system(size: 8))
+                        .foregroundColor(.green)
+                } else {
+                    Text("点击复制")
+                        .font(.system(size: 8))
+                        .foregroundColor(.white.opacity(0.2))
+                }
+                Spacer()
+                Text("\(text.count) 字")
+                    .font(.system(size: 8, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.15))
+            }
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    // MARK: - 图片卡片
+
+    private func imageCard(_ img: NSImage) -> some View {
+        ZStack {
+            // 缩略图
+            Image(nsImage: img)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: cardWidth, height: 100)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+
+            // 底部渐变 + 时间
+            VStack {
+                Spacer()
+                HStack {
+                    Text(timeAgo)
+                        .font(.system(size: 8, design: .monospaced))
+                        .foregroundColor(.white.opacity(0.7))
+                    Spacer()
+                    if isCopied {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 10))
+                            .foregroundColor(.green)
+                    }
+                }
+                .padding(.horizontal, 6)
+                .padding(.bottom, 4)
+                .background(
+                    LinearGradient(
+                        colors: [.clear, .black.opacity(0.6)],
+                        startPoint: .top, endPoint: .bottom
+                    )
+                )
+            }
+        }
+        .frame(width: cardWidth, height: 100)
+    }
+
+    // MARK: - 卡片宽度（根据内容自适应）
+
+    private var cardWidth: CGFloat {
+        switch item.content {
+        case let .text(text):
+            // 短文字窄卡，长文字宽卡
+            let len = text.count
+            if len < 30 { return 90 }
+            if len < 80 { return 130 }
+            return 160
+        case .image:
+            return 120
+        }
+    }
+
     private var timeAgo: String {
         let interval = Date().timeIntervalSince(item.timestamp)
         if interval < 60 { return "刚刚" }
-        if interval < 3600 { return "\(Int(interval / 60)) 分钟前" }
-        if interval < 86400 { return "\(Int(interval / 3600)) 小时前" }
-        return "\(Int(interval / 86400)) 天前"
+        if interval < 3600 { return "\(Int(interval / 60))分钟前" }
+        if interval < 86400 { return "\(Int(interval / 3600))小时前" }
+        return "\(Int(interval / 86400))天前"
     }
 }

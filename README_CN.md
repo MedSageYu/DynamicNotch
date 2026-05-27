@@ -15,9 +15,7 @@
 
 ---
 
-<p align="center">
-  <img src="docs/demo.gif" alt="DynamicNotch 演示" width="600">
-</p>
+
 
 **DynamicNotch** 为 macOS 带来 iPhone 灵动岛体验 —— 一个智能浮动胶囊，驻留在菜单栏，随你的操作自动适配。
 
