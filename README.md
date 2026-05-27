@@ -1,77 +1,43 @@
-# Pill
+# 💊 Pill — Your Mac's New Best Friend
 
-A macOS menu bar application that lives at the top of your screen, providing quick access to everyday tools through a sleek, pill-shaped interface.
+A sleek, pill-shaped command center that lives at the top of your screen.
 
-> **100% AI-generated** — Every line of code was written by an AI assistant (OpenClaw/Claude), from architecture to pixel.
+> **100% AI-generated** — Every line of code was written by an AI assistant (OpenClaw + Claude).
 
 ## Features
 
-### 🎵 Music Control
-- Now Playing display with album art
-- Play/Pause, Next, Previous controls
-- Works with Apple Music
+| Feature | Description |
+|---------|-------------|
+| 🎵 Music | Now Playing with album art, play/pause/skip |
+| 🪞 Mirror | Live camera preview, flip toggle |
+| 📅 Calendar | 7-day scrollable view, event list, category filter |
+| 📋 Clipboard | Auto-records last 20 copies (text + images), horizontal cards |
+| 📡 AirDrop | Drag files near pill → expand → send, file tray with auto-clear |
+| ⚙️ Settings | Auto-collapse timer, pill height, mirror flip, calendar filter |
 
-### 🪞 Mirror
-- Live camera preview directly in the pill
-- Flip/mirror toggle
-- Dynamic circular frame
-
-### 📅 Calendar
-- 7-day horizontal scrollable view
-- Today highlighted
-- Event list from system Calendar (EKEventStore)
-- Filter by calendar category in Settings
-
-### 📋 Clipboard History
-- Auto-records last 20 copied items (text + images)
-- Horizontal card layout (like social media feed)
-- Hover to expand text preview
-- One-click copy back to clipboard
-- Auto-cleanup beyond 20 items
-
-### 📡 AirDrop
-- Drop files near the pill → auto-expand → send via AirDrop
-- File tray for temporary storage
-- Configurable auto-clear policy (on drag out / 1 hour / 2 hours / 1 day / never)
-
-### ⚙️ Settings
-- Auto-collapse timer (0.5–10.0s)
-- Collapsed pill height (18–40pt)
-- Camera mirror flip
-- Calendar category filter
-- File tray clear policy
-
-## Architecture
-
-```
-Pill.app
-├── NotchWindow (NSWindow, .statusBar+8, transparent)
-├── DragOverlayView (file drag detection)
-│   └── NSHostingView → NotchView
-│       ├── CollapsedMusicView (album art + waveform)
-│       ├── CollapsedNotificationView
-│       └── expandedContent
-│           ├── Tab 1: Home (Music | Mirror | Calendar)
-│           ├── Tab 2: AirDrop + File Tray
-│           ├── Tab 3: Clipboard History
-│           └── Tab 4: Settings
-└── Global EventMonitor (mouse tracking, no NSTrackingArea)
-```
-
-## Build
+## Build (3 commands)
 
 ```bash
-# Clone
 git clone https://github.com/MedSageYu/Pill.git
 cd Pill
-
-# Build
 swift build
+```
 
-# Deploy
+That's it. `swift build` handles everything — no Xcode, no bridging headers, no manual compilation.
+
+## Deploy
+
+```bash
+# Create app bundle
 mkdir -p ~/Applications/Pill.app/Contents/MacOS
+
+# Copy binary
 cp .build/debug/Pill ~/Applications/Pill.app/Contents/MacOS/Pill
+
+# Copy Info.plist (permissions, icon, etc.)
 cp Sources/DynamicNotch/Info.plist ~/Applications/Pill.app/Contents/Info.plist
+
+# Launch
 open ~/Applications/Pill.app
 ```
 
@@ -79,25 +45,77 @@ open ~/Applications/Pill.app
 
 - macOS 14.0+
 - Apple Silicon (arm64)
-- Swift 5.9+
+- Swift 5.9+ (comes with Xcode Command Line Tools)
 
 ## Permissions
 
-| Permission | Purpose |
-|-----------|---------|
+| Permission | Why |
+|-----------|-----|
 | Camera | Mirror preview |
 | Calendar | Event display |
-| Accessibility | Media key simulation (optional) |
+
+The app will ask for permissions on first use.
+
+## Architecture
+
+```
+Pill.app
+├── Package.swift          ← Swift Package Manager config
+├── Sources/DynamicNotch/
+│   ├── main.swift         ← App entry point
+│   ├── AppDelegate.swift  ← Lifecycle
+│   ├── Info.plist         ← Permissions + bundle config
+│   ├── Bridge/
+│   │   └── mrhelper.c     ← Standalone C tool (compiled separately)
+│   ├── Managers/
+│   │   ├── NotchViewModel.swift    ← State management
+│   │   ├── NotchWindow.swift       ← Transparent window
+│   │   ├── NotchWindowController.swift ← Window lifecycle
+│   │   ├── EventMonitor.swift      ← Global mouse tracking
+│   │   ├── ClipboardManager.swift  ← Clipboard polling
+│   │   └── NotificationManager.swift ← System notifications
+│   ├── Views/
+│   │   ├── NotchView.swift         ← Main pill UI
+│   │   ├── MusicControlView.swift  ← Music controls
+│   │   ├── MirrorPanel.swift       ← Camera + Settings
+│   │   ├── ContentViews.swift      ← Calendar + File tray
+│   │   ├── ClipboardPanelView.swift ← Clipboard history
+│   │   ├── AirDropPanel.swift      ← AirDrop sharing
+│   │   ├── FileTrayPanel.swift     ← File tray manager
+│   │   ├── WaveformView.swift      ← Audio waveform animation
+│   │   └── NotchTab.swift          ← Tab enum
+│   └── Models/
+│       └── AppSettings.swift       ← UserDefaults persistence
+└── mrhelper/              ← Pre-compiled C tool (optional)
+```
+
+## How It Works
+
+1. **Transparent Window** — A borderless NSWindow sits at the top of the screen, above the menu bar
+2. **SwiftUI Content** — NotchView draws the pill shape and all content
+3. **Global Event Monitor** — Tracks mouse position without NSTrackingArea (avoids click-through issues)
+4. **Spring Animations** — Smooth expand/collapse with `.interactiveSpring`
+
+## Troubleshooting
+
+**Q: `swift build` says "no such module"**
+A: Make sure you're in the `Pill/` directory (where `Package.swift` is).
+
+**Q: The app doesn't appear**
+A: It's a background app (no Dock icon). Look at the top-center of your screen.
+
+**Q: Music not showing**
+A: Open Apple Music and play a song. The app polls every 2.5 seconds.
+
+**Q: Calendar not showing events**
+A: Grant calendar permission when prompted. Check Settings → calendar filter.
 
 ## Attribution
 
-This project was **entirely developed by AI** (OpenClaw agent powered by Claude).
-
-If you use, modify, or redistribute this code, please credit:
 - **Author**: Yu Zhu (余铸)
 - **AI Development**: OpenClaw + Claude
 - **Repository**: https://github.com/MedSageYu/Pill
 
 ## License
 
-MIT License — use freely for any purpose.
+MIT License
