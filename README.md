@@ -128,12 +128,15 @@ Pill.app
 ## Troubleshooting
 
 **Q: `swift build` says "manifest compilation error"**
-A: Your Xcode Command Line Tools might need resetting:
+A: This usually means Swift toolchain issue. Try:
 ```bash
+# Reset Xcode Command Line Tools
 sudo xcode-select --reset
 xcode-select --install
+
+# Or update to latest Xcode
+sudo softwareupdate --all --install --force
 ```
-Then try `swift build` again.
 
 **Q: `swift build` says "no such module"**
 A: Make sure you're in the `Pill/` directory (where `Package.swift` is).
@@ -151,6 +154,12 @@ A: Grant calendar permission when prompted. Check Settings → calendar filter.
 A: Install Xcode Command Line Tools:
 ```bash
 xcode-select --install
+```
+
+**Q: macOS version too old**
+A: The app requires macOS 14.0 (Sonoma) or later. Check with:
+```bash
+sw_vers -productVersion
 ```
 
 ## Attribution
