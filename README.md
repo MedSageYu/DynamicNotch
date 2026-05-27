@@ -127,37 +127,48 @@ Pill.app
 
 ## Troubleshooting
 
-**Q: `swift build` says "manifest compilation error"**
-A: This usually means Swift toolchain issue. Try:
+### ❌ `swift build` fails with "Invalid manifest" or "PackageDescription" errors
+
+This means your Swift toolchain is broken or incomplete. Fix:
+
 ```bash
-# Reset Xcode Command Line Tools
-sudo xcode-select --reset
+# Step 1: Remove corrupted Command Line Tools
+sudo rm -rf /Library/Developer/CommandLineTools
+
+# Step 2: Reinstall
 xcode-select --install
 
-# Or update to latest Xcode
-sudo softwareupdate --all --install --force
+# Step 3: Verify
+swift --version
+
+# Step 4: Build
+cd Pill
+swift build
 ```
 
-**Q: `swift build` says "no such module"**
-A: Make sure you're in the `Pill/` directory (where `Package.swift` is).
+If that doesn't work, install full Xcode from the App Store (free, ~12GB).
 
-**Q: The app doesn't appear**
-A: It's a background app (no Dock icon). Look at the top-center of your screen.
+### ❌ `swift` command not found
 
-**Q: Music not showing**
-A: Open Apple Music and play a song. The app polls every 2.5 seconds.
-
-**Q: Calendar not showing events**
-A: Grant calendar permission when prompted. Check Settings → calendar filter.
-
-**Q: `swift` command not found**
-A: Install Xcode Command Line Tools:
 ```bash
 xcode-select --install
 ```
 
-**Q: macOS version too old**
-A: The app requires macOS 14.0 (Sonoma) or later. Check with:
+### ❌ App doesn't appear
+
+It's a background app (no Dock icon). Look at the **top-center of your screen** for a small black pill.
+
+### ❌ Music not showing
+
+Open Apple Music and play a song. The app polls every 2.5 seconds.
+
+### ❌ Calendar not showing events
+
+Grant calendar permission when prompted. Check Settings → calendar filter.
+
+### ❌ macOS version too old
+
+Requires macOS 14.0 (Sonoma) or later:
 ```bash
 sw_vers -productVersion
 ```
