@@ -4,9 +4,20 @@ A sleek, pill-shaped command center that lives at the top of your screen.
 
 > **100% AI-generated** — Every line of code was written by an AI assistant (OpenClaw + Claude).
 
-## Features
+## ⬇️ Download
 
-| Feature | Description |
+**[Download Pill.zip](https://github.com/MedSageYu/Pill/releases/download/v1.0.0/Pill.zip)** — Just download, unzip, and run. No Xcode needed.
+
+1. Download `Pill.zip`
+2. Unzip
+3. Move `Pill.app` to Applications (or anywhere)
+4. Double-click to run
+
+**That's it.** No terminal, no build tools, no dependencies.
+
+## ✨ Features
+
+| Feature | What it does |
 |---------|-------------|
 | 🎵 Music | Now Playing with album art, play/pause/skip |
 | 🪞 Mirror | Live camera preview, flip toggle |
@@ -15,7 +26,25 @@ A sleek, pill-shaped command center that lives at the top of your screen.
 | 📡 AirDrop | Drag files near pill → expand → send, file tray with auto-clear |
 | ⚙️ Settings | Auto-collapse timer, pill height, mirror flip, calendar filter |
 
-## Build (3 commands)
+## 🏗️ Architecture
+
+```
+Pill.app
+├── Transparent NSWindow (.statusBar + 8)
+├── DragOverlayView (file drag detection)
+│   └── NotchView (SwiftUI)
+│       ├── Collapsed: album art + waveform
+│       └── Expanded: 4 tabs
+│           ├── Home (Music | Mirror | Calendar)
+│           ├── AirDrop + File Tray
+│           ├── Clipboard History
+│           └── Settings
+└── Global EventMonitor (mouse tracking)
+```
+
+## 🛠️ Build from Source
+
+If you want to build yourself:
 
 ```bash
 git clone https://github.com/MedSageYu/Pill.git
@@ -23,162 +52,40 @@ cd Pill
 swift build
 ```
 
-That's it. `swift build` handles everything — no Xcode, no bridging headers, no manual compilation.
+Requires Swift 5.9+ (comes with Xcode or Command Line Tools).
 
-## Deploy
-
-```bash
-# Create app bundle
-mkdir -p ~/Applications/Pill.app/Contents/MacOS
-
-# Copy binary
-cp .build/debug/Pill ~/Applications/Pill.app/Contents/MacOS/Pill
-
-# Copy Info.plist (permissions, icon, etc.)
-cp Sources/DynamicNotch/Info.plist ~/Applications/Pill.app/Contents/Info.plist
-
-# Launch
-open ~/Applications/Pill.app
-```
-
-## Requirements
-
-- macOS 14.0+ (Sonoma or later)
-- Apple Silicon (arm64)
-- Swift 5.9+ (comes with Xcode 15+ or Command Line Tools)
-
-### Swift Version Compatibility
-
-This project is tested with Swift 6.3.2. If you have Swift 6.0.x, it should still work, but if you encounter issues:
-
-```bash
-# Check your Swift version
-swift --version
-
-# If older than 5.9, update Xcode or Command Line Tools
-sudo softwareupdate --all --install --force
-```
-
-### Installing Swift
-
-If `swift` command not found:
-```bash
-# Option 1: Install Xcode Command Line Tools
-xcode-select --install
-
-# Option 2: Install full Xcode from App Store
-```
-
-### Verifying Swift
-
-```bash
-swift --version
-# Should show: swift-driver version X.X.X Apple Swift version 5.9+
-```
-
-## Permissions
+## 📱 Permissions
 
 | Permission | Why |
 |-----------|-----|
-| Camera | Mirror preview |
-| Calendar | Event display |
+| 📷 Camera | Mirror preview |
+| 📅 Calendar | Event display |
 
 The app will ask for permissions on first use.
 
-## Architecture
+## 🎨 Design
 
-```
-Pill.app
-├── Package.swift          ← Swift Package Manager config
-├── Sources/DynamicNotch/
-│   ├── main.swift         ← App entry point
-│   ├── AppDelegate.swift  ← Lifecycle
-│   ├── Info.plist         ← Permissions + bundle config
-│   ├── Bridge/
-│   │   └── mrhelper.c     ← Standalone C tool (compiled separately)
-│   ├── Managers/
-│   │   ├── NotchViewModel.swift    ← State management
-│   │   ├── NotchWindow.swift       ← Transparent window
-│   │   ├── NotchWindowController.swift ← Window lifecycle
-│   │   ├── EventMonitor.swift      ← Global mouse tracking
-│   │   ├── ClipboardManager.swift  ← Clipboard polling
-│   │   └── NotificationManager.swift ← System notifications
-│   ├── Views/
-│   │   ├── NotchView.swift         ← Main pill UI
-│   │   ├── MusicControlView.swift  ← Music controls
-│   │   ├── MirrorPanel.swift       ← Camera + Settings
-│   │   ├── ContentViews.swift      ← Calendar + File tray
-│   │   ├── ClipboardPanelView.swift ← Clipboard history
-│   │   ├── AirDropPanel.swift      ← AirDrop sharing
-│   │   ├── FileTrayPanel.swift     ← File tray manager
-│   │   ├── WaveformView.swift      ← Audio waveform animation
-│   │   └── NotchTab.swift          ← Tab enum
-│   └── Models/
-│       └── AppSettings.swift       ← UserDefaults persistence
-└── mrhelper/              ← Pre-compiled C tool (optional)
-```
+- **Minimal** — Black pill, white text, no visual noise
+- **Native** — Feels like it belongs on macOS
+- **Fast** — Hover to expand in 0.4 seconds
+- **Smart** — Auto-collapses when you're done
+- **Private** — No network calls, no data collection
 
-## How It Works
+## 🤖 Built by AI
 
-1. **Transparent Window** — A borderless NSWindow sits at the top of the screen, above the menu bar
-2. **SwiftUI Content** — NotchView draws the pill shape and all content
-3. **Global Event Monitor** — Tracks mouse position without NSTrackingArea (avoids click-through issues)
-4. **Spring Animations** — Smooth expand/collapse with `.interactiveSpring`
+This project was **100% generated by AI** (OpenClaw + Claude). Every function, every pixel, every bug fix — all AI-generated.
 
-## Troubleshooting
+## 📄 License
 
-### ❌ `swift build` fails with "Invalid manifest" or "PackageDescription" errors
-
-This means your Swift toolchain is broken or incomplete. Fix:
-
-```bash
-# Step 1: Remove corrupted Command Line Tools
-sudo rm -rf /Library/Developer/CommandLineTools
-
-# Step 2: Reinstall
-xcode-select --install
-
-# Step 3: Verify
-swift --version
-
-# Step 4: Build
-cd Pill
-swift build
-```
-
-If that doesn't work, install full Xcode from the App Store (free, ~12GB).
-
-### ❌ `swift` command not found
-
-```bash
-xcode-select --install
-```
-
-### ❌ App doesn't appear
-
-It's a background app (no Dock icon). Look at the **top-center of your screen** for a small black pill.
-
-### ❌ Music not showing
-
-Open Apple Music and play a song. The app polls every 2.5 seconds.
-
-### ❌ Calendar not showing events
-
-Grant calendar permission when prompted. Check Settings → calendar filter.
-
-### ❌ macOS version too old
-
-Requires macOS 14.0 (Sonoma) or later:
-```bash
-sw_vers -productVersion
-```
+MIT License — use freely for any purpose.
 
 ## Attribution
 
+If you use, modify, or redistribute this code, please credit:
 - **Author**: Yu Zhu (余铸)
 - **AI Development**: OpenClaw + Claude
 - **Repository**: https://github.com/MedSageYu/Pill
 
-## License
+---
 
-MIT License
+⭐ Star this repo if you find it useful!
