@@ -157,6 +157,8 @@ struct NotchView: View {
                     HomePanelView(vm: vm).transition(.opacity)
                 case .airdrop:
                     AirDropFilePanel().transition(.opacity)
+                case .clipboard:
+                    ClipboardPanelView().transition(.opacity)
                 case .more:
                     MorePanelView(vm: vm).transition(.opacity)
                 }
