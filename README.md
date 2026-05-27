@@ -98,6 +98,14 @@ Pill.app
 
 ## Troubleshooting
 
+**Q: `swift build` says "manifest compilation error"**
+A: Your Xcode Command Line Tools might need resetting:
+```bash
+sudo xcode-select --reset
+xcode-select --install
+```
+Then try `swift build` again.
+
 **Q: `swift build` says "no such module"**
 A: Make sure you're in the `Pill/` directory (where `Package.swift` is).
 
@@ -109,6 +117,12 @@ A: Open Apple Music and play a song. The app polls every 2.5 seconds.
 
 **Q: Calendar not showing events**
 A: Grant calendar permission when prompted. Check Settings → calendar filter.
+
+**Q: `swift` command not found**
+A: Install Xcode Command Line Tools:
+```bash
+xcode-select --install
+```
 
 ## Attribution
 
