@@ -145,10 +145,7 @@ struct NotchView: View {
     @ViewBuilder
     private var tabContent: some View {
         ZStack {
-            if vm.showQClawChat {
-                QClawChatView(vm: vm)
-                    .transition(.opacity)
-            } else if vm.showSettings {
+            if vm.showSettings {
                 SettingsPanel(vm: vm)
                     .transition(.opacity)
             } else {
@@ -368,10 +365,6 @@ private struct MorePanelView: View {
             ToolButton(icon: "gearshape.fill", label: "设置", color: .gray) {
                 withAnimation(.easeOut(duration: 0.18)) { vm.activeTab = .more }
                 vm.showSettings = true
-            }
-            ToolButton(icon: "brain.fill", label: "AI", color: .purple) {
-                withAnimation(.easeOut(duration: 0.18)) { vm.activeTab = .more }
-                vm.showQClawChat = true
             }
         }
         .frame(maxHeight: .infinity)

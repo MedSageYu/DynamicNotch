@@ -121,7 +121,6 @@ final class NotchViewModel: NSObject, ObservableObject {
     @Published var screenRect: CGRect = .zero
     @Published var activeTab: NotchTab = .home
     @Published var showSettings: Bool = false
-    @Published var showQClawChat: Bool = false
     @Published var mirrorEnabled: Bool = true {
         didSet { UserDefaults.standard.set(mirrorEnabled, forKey: "mirrorEnabled") }
     }

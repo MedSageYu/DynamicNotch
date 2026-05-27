@@ -235,13 +235,3 @@ final class CalendarStore: ObservableObject {
     var allCalendars: [EKCalendar] { store.calendars(for: .event) }
 }
 
-// MARK: - AI 占位
-
-struct AIViewPlaceholder: View {
-    var body: some View {
-        VStack(spacing: 6) {
-            Image(systemName: "brain.fill").font(.system(size: 28)).foregroundColor(.purple.opacity(0.6))
-            Text("QClaw AI").font(.system(size: 12)).foregroundStyle(.secondary)
-        }.frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
