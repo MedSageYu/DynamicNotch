@@ -2,14 +2,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "DynamicNotch",
+    name: "Pill",
     platforms: [.macOS(.v14)],
     products: [
-        .executable(name: "DynamicNotch", targets: ["DynamicNotch"])
+        .executable(name: "Pill", targets: ["Pill"])
     ],
     targets: [
         .executableTarget(
-            name: "DynamicNotch",
+            name: "Pill",
             path: "Sources/DynamicNotch",
             exclude: ["Bridge"]
         )

@@ -294,7 +294,7 @@ final class NotchViewModel: NSObject, ObservableObject {
     private func showQuitMenu() {
         let menu = NSMenu()
         let item = NSMenuItem(
-            title: "退出 DynamicNotch",
+            title: "退出 Pill",
             action: #selector(quitApplication),
             keyEquivalent: ""
         )
@@ -364,7 +364,7 @@ final class NotchViewModel: NSObject, ObservableObject {
 
         // 拷贝到缓存目录（文件在原位置保留）
         let cacheDir = URL(fileURLWithPath: NSHomeDirectory())
-            .appendingPathComponent("Library/Caches/DynamicNotch/AirDrop")
+            .appendingPathComponent("Library/Caches/Pill/AirDrop")
         try? FileManager.default.createDirectory(at: cacheDir, withIntermediateDirectories: true)
 
         let dest = cacheDir.appendingPathComponent(url.lastPathComponent)
@@ -423,7 +423,7 @@ final class NotchViewModel: NSObject, ObservableObject {
 
         // 1. 清理 AirDrop 残留（app 崩溃留下的）
         let airdropDir = URL(fileURLWithPath: home)
-            .appendingPathComponent("Library/Caches/DynamicNotch/AirDrop")
+            .appendingPathComponent("Library/Caches/Pill/AirDrop")
         if let files = try? fm.contentsOfDirectory(at: airdropDir,
             includingPropertiesForKeys: nil) {
             for f in files { try? fm.removeItem(at: f) }
@@ -431,7 +431,7 @@ final class NotchViewModel: NSObject, ObservableObject {
 
         // 2. 清理 TrayDrop — 保留最新的 20 个文件
         let trayDir = URL(fileURLWithPath: home)
-            .appendingPathComponent("Library/Caches/DynamicNotch/TrayDrop")
+            .appendingPathComponent("Library/Caches/Pill/TrayDrop")
         if let files = try? fm.contentsOfDirectory(at: trayDir,
             includingPropertiesForKeys: [.contentModificationDateKey]) {
             let sorted = files.sorted { a, b in

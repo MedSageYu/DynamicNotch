@@ -31,7 +31,7 @@ final class FileTrayManager: ObservableObject {
 
     static let storageDir: URL = {
         let d = FileManager.default.homeDirectoryForCurrentUser
-            .appendingPathComponent("Library/Caches/DynamicNotch/FileTray")
+            .appendingPathComponent("Library/Caches/Pill/FileTray")
         try? FileManager.default.createDirectory(at: d, withIntermediateDirectories: true)
         return d
     }()
