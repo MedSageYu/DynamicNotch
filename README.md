@@ -43,9 +43,26 @@ open ~/Applications/Pill.app
 
 ## Requirements
 
-- macOS 14.0+
+- macOS 14.0+ (Sonoma or later)
 - Apple Silicon (arm64)
-- Swift 5.9+ (comes with Xcode Command Line Tools)
+- Swift 5.9+ (comes with Xcode 15+ or Command Line Tools)
+
+### Installing Swift
+
+If `swift` command not found:
+```bash
+# Option 1: Install Xcode Command Line Tools
+xcode-select --install
+
+# Option 2: Install full Xcode from App Store
+```
+
+### Verifying Swift
+
+```bash
+swift --version
+# Should show: swift-driver version X.X.X Apple Swift version 5.9+
+```
 
 ## Permissions
 
