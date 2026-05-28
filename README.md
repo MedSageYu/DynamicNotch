@@ -10,7 +10,12 @@ A sleek pill-shaped command center for your Mac.
 2. Unzip
 3. Double-click `Pill.app` to run
 
-No installation needed. No terminal. No Xcode. No extra software.
+> **First time?** If macOS says "cannot be opened because the developer cannot be verified":
+> - Right-click `Pill.app` → select **Open**
+> - Click **Open** in the dialog
+> - It will work normally after that
+
+No terminal. No Xcode. No extra software.
 
 ## What it does
 
