@@ -109,35 +109,42 @@ struct NotchView: View {
         .transition(.opacity)
     }
 
-    // MARK: - Tab Bar（3 个 Tab）
+    // MARK: - Tab Bar（左 2 + 右 2，避开刘海）
 
     private var tabBar: some View {
         HStack(spacing: 0) {
-            ForEach(NotchTab.allCases, id: \.self) { tab in
-                let active = vm.activeTab == tab
-                HStack(spacing: 5) {
-                    Image(systemName: tab.icon).font(.system(size: 11, weight: .medium))
-                    Text(tab.label).font(.system(size: 11))
-                }
-                .foregroundColor(active ? .white : .white.opacity(0.45))
-                .padding(.horizontal, 12)
-                .padding(.vertical, 5)
-                .background(
-                    RoundedRectangle(cornerRadius: 7)
-                        .fill(active ? .white.opacity(0.12) : .clear)
-                )
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    withAnimation(.easeOut(duration: 0.18)) {
-                        vm.activeTab = tab
-                        vm.showSettings = false
-                    }
-                }
-            }
+            // 左边：主页、隔空
+            tabButton(.home)
+            tabButton(.airdrop)
             Spacer()
+            // 右边：剪贴、更多
+            tabButton(.clipboard)
+            tabButton(.more)
         }
         .padding(.horizontal, 12)
         .frame(height: 30)
+    }
+
+    private func tabButton(_ tab: NotchTab) -> some View {
+        let active = vm.activeTab == tab
+        return HStack(spacing: 5) {
+            Image(systemName: tab.icon).font(.system(size: 11, weight: .medium))
+            Text(tab.label).font(.system(size: 11))
+        }
+        .foregroundColor(active ? .white : .white.opacity(0.45))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 5)
+        .background(
+            RoundedRectangle(cornerRadius: 7)
+                .fill(active ? .white.opacity(0.12) : .clear)
+        )
+        .contentShape(Rectangle())
+        .onTapGesture {
+            withAnimation(.easeOut(duration: 0.18)) {
+                vm.activeTab = tab
+                vm.showSettings = false
+            }
+        }
     }
 
     // MARK: - 内容切换
